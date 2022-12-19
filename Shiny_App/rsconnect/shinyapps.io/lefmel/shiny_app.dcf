@@ -1,0 +1,11 @@
+name: shiny_app
+title:
+username:
+account: lefmel
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7814037
+bundleId: 6653549
+url: https://lefmel.shinyapps.io/shiny_app/
+when: 1671457387.81188
+lastSyncTime: 1671457387.81188
