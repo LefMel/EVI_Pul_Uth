@@ -7,6 +7,8 @@
 library(shiny)    
 library(shinydashboard)
 #library(rintrojs)
+library(EVI)
+#pak::pkg_install("vctrs")
 
 ui <- dashboardPage(
   
@@ -103,6 +105,7 @@ ui <- dashboardPage(
 
 server <- function(input, output, session) {
   
+  library(EVI)
   
   # Respiratory 
   output$box1 <- renderPlot({
