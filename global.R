@@ -1,6 +1,16 @@
 library(googledrive)
 library(XML)
 library(rlist)
+library(EVI) # doesn't work
+
+#getwd()
+#setwd("C:/Users/LefMel/Documents/EVI Uth/Final_files")
+getwd()
+
+# R lang update to 1.0.6.
+#install.packages("pak")
+#pak::pkg_install("r-lib/rlang")
+
 drive_deauth()
 temp <- tempfile(tmpdir = getwd(), fileext = ".zip")
 dl <- drive_download(
@@ -23,6 +33,11 @@ colnames(data) = headers
 
 data = data[-1,1:12]
 
+getwd()
+
+library(EVI)
+
+remotes::install_github("ku-awdc/EVI")
 
 EVI_Res_Inf = deviant(as.numeric(data$`Respiratory Infections`), r_a = 14)
 EVI_Pneum = deviant(as.numeric(data$Pneumonia, r_a=14))
