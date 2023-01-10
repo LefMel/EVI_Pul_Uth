@@ -209,19 +209,13 @@ server <- function(input, output) {
   })
   
   output$box15 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=T)
-  })
-  
-  output$box16 <- renderPlot({
     evi.graphs(EVI_output=EVI_COVID, graph="PPV", ln=T)
   })
   
-  output$box12 <- renderPlot({
+  output$box16 <- renderPlot({
     evi.graphs(EVI_output=EVI_COVID, graph="NPV", ln=T)
   })
-  
 
-  
   
 }
 
