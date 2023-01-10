@@ -2,8 +2,10 @@
 #
 # This is the user-interface definition of a Shiny web application. You can
 # run the application by clicking 'Run App' above.
-#
-library(shiny)
+
+library(shinydashboard)
+library(shiny)    
+library(rintrojs)
 
 ui <- dashboardPage(
   
@@ -95,10 +97,6 @@ ui <- dashboardPage(
 #server.R
 
 #
-
-#library(shinydashboard)
-#library(shiny)    
-#library(rintrojs)
 
 # Define server logic required to draw a histogram
 
