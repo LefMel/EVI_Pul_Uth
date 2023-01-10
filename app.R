@@ -6,9 +6,7 @@
 
 library(shiny)    
 library(shinydashboard)
-#library(rintrojs)
 library(EVI)
-#pak::pkg_install("vctrs")
 
 ui <- dashboardPage(
   
@@ -25,7 +23,40 @@ ui <- dashboardPage(
   # SIDEBAR
   dashboardSidebar(
     width = 300,
-    div(class = "inlay", style = "height:15px;width:100%;background-color: #ecf0f5;")
+    div(class = "inlay", style = "height:15px;width:100%;background-color: #ecf0f5;"),
+    
+    sidebarUserPanel("Version 1.0"),
+    
+    tabPanel("Info",
+             h3("Respiratory Infections"),
+             h5("Time period : 02/10/2021 until 2023"),
+             h5("Days: the serial number for each time point."),
+             h6("01: 02/10/2021 | 225: 20/12/2022"),
+             h3("Pneumonia"),
+             h5("Time period : 02/10/2021 until 2023"),
+             h5("Days: the serial number for each time point."),
+             h6("01: 02/10/2021 | 225: 20/12/2022"),
+             h3("Flu"),
+             h5("Time period : 16/11/2022 until 2023"),
+             h5("Days: the serial number for each time point."),
+             h6("01: 16/11/2022 | 25: 05/01/2023"),
+             h3("COVID"),
+             h5("Time period : 01/02/2022 until 2023"),
+             h5("Days: the serial number for each time point."),
+             h6("01: 01/02/2022 | 170: 20/12/2022"),
+             
+             h4("Figures Explained"),
+             h5("Upper left:"),
+             h6("Observations (updated every two days), presented on the original scale, with red dots corresponding to dates that, according to EVI, an early warning was issued."),
+             h5("Upper right:"),
+             h6("Observations (updated every two days), presented on the logarithmic scale, which facilitates the comparison of the steepness of the epidemic curve between the different waves."),
+             h5("Bottom left:"),
+             h6("Positive predictive value (PPV) for the days that an early warning was issued. Higher color intensity corresponds to PPV closer to the value of 1."),
+             h5("Bottom right:"),
+             h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1.")
+             
+             
+    )
   ),
   
   
@@ -51,12 +82,22 @@ ui <- dashboardPage(
       )
     ),
     tabsetPanel(
-      tabPanel("COVID",
+      tabPanel("Flu",
                fluidRow(
                  box(plotOutput("box9")),
                  box(plotOutput("box10")),
                  box(plotOutput("box11")),
                  box(plotOutput("box12"))
+               )
+      )
+    ),
+    tabsetPanel(
+      tabPanel("COVID",
+               fluidRow(
+                 box(plotOutput("box13")),
+                 box(plotOutput("box14")),
+                 box(plotOutput("box15")),
+                 box(plotOutput("box16"))
                )
       )
     )
@@ -103,10 +144,9 @@ ui <- dashboardPage(
 
 # Define server logic required to draw a histogram
 
-server <- function(input, output, session) {
+server <- function(input, output) {
   
   library(EVI)
-  
   # Respiratory 
   output$box1 <- renderPlot({
     evi.graphs(EVI_output=EVI_Res_Inf, graph="EVI", ln=F)
@@ -141,21 +181,38 @@ server <- function(input, output, session) {
     evi.graphs(EVI_output=EVI_Pneum, graph="NPV", ln=T)
   })
   
-  # COVID
-  
+  # Flu
   output$box9 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
-  })
-  
-  output$box9 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
+    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=F)
   })
   
   output$box10 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=T)
+    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=T)
   })
   
   output$box11 <- renderPlot({
+    evi.graphs(EVI_output=EVI_Flu, graph="PPV", ln=T)
+  })
+  
+  output$box12 <- renderPlot({
+    evi.graphs(EVI_output=EVI_Flu, graph="NPV", ln=T)
+  })
+  
+  # COVID
+  
+  output$box13 <- renderPlot({
+    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
+  })
+  
+  output$box14 <- renderPlot({
+    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
+  })
+  
+  output$box15 <- renderPlot({
+    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=T)
+  })
+  
+  output$box16 <- renderPlot({
     evi.graphs(EVI_output=EVI_COVID, graph="PPV", ln=T)
   })
   
@@ -163,24 +220,7 @@ server <- function(input, output, session) {
     evi.graphs(EVI_output=EVI_COVID, graph="NPV", ln=T)
   })
   
-  # FLU
-  
-  output$box13 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=F)
-  })
-  
-  output$box14 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=T)
-  })
-  
-  
-  output$box15 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="PPV", ln=T)
-  })
-  
-  output$box16 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="NPV", ln=T)
-  })
+
   
   
 }

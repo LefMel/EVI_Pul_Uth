@@ -1,16 +1,4 @@
-library(googledrive)
-library(XML)
-library(rlist)
 library(EVI)
-
-#getwd()
-#setwd("C:/Users/LefMel/Documents/EVI Uth/Final_files")
-getwd()
-
-# R lang update to 1.0.6.
-#install.packages("pak")
-#pak::pkg_install("r-lib/rlang")
-
 drive_deauth()
 temp <- tempfile(tmpdir = getwd(), fileext = ".zip")
 dl <- drive_download(
@@ -36,17 +24,44 @@ data = data[-1,1:12]
 getwd()
 str(data)
 
-#remotes::install_github("ku-awdc/EVI")
 
-EVI_Res_Inf = deviant(as.numeric(as.character(data$Resp_Inf)), r_a = 14)
+
+# EVI_Res_Inf
+if(!exists("EVI_Res_Inf"))
+  load("EVI_Res_Inf")
+EVI_output = EVI_Res_Inf
+
+EVI_Res_Inf = deviant_update(as.numeric(as.character(data$Resp_Inf)), r_a = 14)
 save(EVI_Res_Inf, file="EVI_Res_Inf")
-EVI_Pneum = deviant(as.numeric(as.character(data$Pneum), r_a=14))
+load("EVI_Res_Inf")
+
+# EVI_Pneum
+if(!exists("EVI_Pneum"))
+  load("EVI_Pneum")
+EVI_output = EVI_Pneum
+
+EVI_Pneum = deviant_update(as.numeric(as.character(data$Pneum), r_a=14))
 save(EVI_Pneum, file="EVI_Pneum")
-EVI_Flu = deviant(as.numeric(as.character(data$Flu[206:length(data$Flu)])), r_a = 14)
+load("EVI_Pneum")
+
+# EVI_Flu
+if(!exists("EVI_Flu"))
+  load("EVI_Flu")
+EVI_output = EVI_Flu
+
+EVI_Flu = deviant_update(as.numeric(as.character(data$Flu[206:length(data$Flu)])), r_a = 14)
 save(EVI_Flu, file="EVI_Flu")
-EVI_COVID = deviant(as.numeric(as.character(data[62:length(data$`COVID-19`),9])), r_a = 14)
+load("EVI_Flu")
+
+
+# EVI_COVID
+if(!exists("EVI_COVID"))
+  load("EVI_COVID")
+EVI_output = EVI_COVID
+
+EVI_COVID = deviant_update(as.numeric(as.character(data[62:length(data$Flu),9])), r_a = 14)
 save(EVI_COVID, file = "EVI_COVID")
-
-
-list.files()
-
+load("EVI_COVID")
+  
+  
+  
