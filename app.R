@@ -54,8 +54,14 @@ ui <- dashboardPage(
              h5("Bottom left:"),
              h6("Positive predictive value (PPV) for the days that an early warning was issued. Higher color intensity corresponds to PPV closer to the value of 1."),
              h5("Bottom right:"),
-             h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1.")
-             
+             h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1."),
+             h4("References"),
+             helpText(tags$b(""),"Kostoulas, P., Meletis, E., Pateras, K. et al. The epidemic volatility index, a novel early warning tool for identifying new waves in an epidemic. Sci Rep 11, 23775 (2021)",
+                      tags$a(href="https://www.nature.com/articles/s41598-021-02622-3", 
+                             "Read it here")),
+             helpText(tags$b(""),"Meletis E. et al. EVI R-package: Epidemic Volatility Index as an Early-Warning Tool",
+                      tags$a(href="https://cran.r-project.org/web/packages/EVI/EVI.pdf", 
+                             "R-package Info"))
              
     )
   ),
@@ -73,7 +79,7 @@ ui <- dashboardPage(
       )
     ),
     tabsetPanel(
-      tabPanel("Pneumonia",
+      tabPanel("COVID",
                fluidRow(
                  box(plotOutput("box5")),
                  box(plotOutput("box6")),
@@ -93,7 +99,7 @@ ui <- dashboardPage(
       )
     ),
     tabsetPanel(
-      tabPanel("COVID",
+      tabPanel("Pneumonia",
                fluidRow(
                  box(plotOutput("box13")),
                  box(plotOutput("box14")),
@@ -209,21 +215,22 @@ server <- function(input, output) {
     evi.graphs(EVI_output=EVI_Res_Inf, graph="NPV", ln=T)
   })
   
-  # Pneumonia
+  # COVID
+  
   output$box5 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=F)
+    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
   })
   
   output$box6 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=T)
+    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
   })
   
   output$box7 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Pneum, graph="PPV", ln=T)
+    evi.graphs(EVI_output=EVI_COVID, graph="PPV", ln=T)
   })
   
   output$box8 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Pneum, graph="NPV", ln=T)
+    evi.graphs(EVI_output=EVI_COVID, graph="NPV", ln=T)
   })
   
   # Flu
@@ -243,24 +250,24 @@ server <- function(input, output) {
     evi.graphs(EVI_output=EVI_Flu, graph="NPV", ln=T)
   })
   
-  # COVID
-  
+  # Pneumonia
   output$box13 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
+    evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=F)
   })
   
   output$box14 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
+    evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=T)
   })
   
   output$box15 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="PPV", ln=T)
+    evi.graphs(EVI_output=EVI_Pneum, graph="PPV", ln=T)
   })
   
   output$box16 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="NPV", ln=T)
+    evi.graphs(EVI_output=EVI_Pneum, graph="NPV", ln=T)
   })
-
+  
+  
   
 }
 
