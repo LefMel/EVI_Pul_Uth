@@ -26,7 +26,7 @@ ui <- dashboardPage(
     width = 300,
     div(class = "inlay", style = "height:15px;width:100%;background-color: #ecf0f5;"),
     
-    sidebarUserPanel("Version 1.0"),
+    sidebarUserPanel("Version 1.1"),
     
     tabPanel("Info",
              h3("Respiratory Infections"),
