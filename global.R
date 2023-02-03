@@ -131,6 +131,7 @@ save(EVI_Flu, file="EVI_Flu")
 EVI_COVID = deviant(as.numeric(as.character(data[62:243,9])), r_a = 14, origin = "2022-02-01")
 save(EVI_COVID, file = "EVI_COVID")
 
+save(data, file="data")
 
 list.files()
 

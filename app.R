@@ -26,25 +26,37 @@ ui <- dashboardPage(
     width = 300,
     div(class = "inlay", style = "height:15px;width:100%;background-color: #ecf0f5;"),
     
-    sidebarUserPanel("Version 1.1"),
+    sidebarUserPanel("Version 1.2"),
     
-    tabPanel("Info",
+    sidebarMenu(
+      menuItem("Options", tabName = "dashboard", icon = icon("dashboard"),
+         #      dateRangeInput("rdates_Res_Inf", "Range of dates for Respiratory Infections:", start = min(EVI_Res_Inf$Days), end = max(EVI_Res_Inf$Days)), # input$rdates_Res_Inf
+        #       dateRangeInput("rdates_Pneum", "Range of dates for Pneumonia:", start = min(EVI_Pneum$Days), end = max(EVI_Pneum$Days)), # input$rdates_Pneum
+        #       dateRangeInput("rdates_Flu", "Range of dates for Flu cases:", start = min(EVI_Flu$Days), end = max(EVI_Flu$Days)), # input$rdates_Flu
+        #       dateRangeInput("rdates_COVID", "Range of dates for COVID-19 cases:", start = min(EVI_COVID$Days), end = max(EVI_COVID$Days)), # input$rdates_COVID
+          
+                 
+               
+               checkboxInput("rlines", "Draw lines instead of points (EVI plots)", value = FALSE)#, # input$rlines==FALSE
+               
+         #      numericInput("rsize", "Size of points", value = 1.5) # input$rsize
+               
+               )
+      
+      
+      
+    ),
+    
+    
+    tabPanel("Info", tabName = "Widgets", icon = icon("th"),
              h3("Respiratory Infections"),
-             h5("Time period : 02/10/2021 until 2023"),
-             h5("Days: the serial number for each time point."),
-             h6("01: 02/10/2021 | 225: 20/12/2022"),
+             h5("Time period:",  paste(min(EVI_Res_Inf$Days), "-", max(EVI_Res_Inf$Days))),
              h3("Pneumonia"),
-             h5("Time period : 02/10/2021 until 2023"),
-             h5("Days: the serial number for each time point."),
-             h6("01: 02/10/2021 | 225: 20/12/2022"),
+             h5("Time period:",  paste(min(EVI_Pneum$Days), "-", max(EVI_Pneum$Days))),
              h3("Flu"),
-             h5("Time period : 16/11/2022 until 2023"),
-             h5("Days: the serial number for each time point."),
-             h6("01: 16/11/2022 | 25: 05/01/2023"),
+             h5("Time period:",  paste(min(EVI_Flu$Days), "-", max(EVI_Flu$Days))),
              h3("COVID"),
-             h5("Time period : 01/02/2022 until 2023"),
-             h5("Days: the serial number for each time point."),
-             h6("01: 01/02/2022 | 170: 20/12/2022"),
+             h5("Time period:",  paste(min(EVI_COVID$Days), "-", max(EVI_COVID$Days))),
              
              h4("Figures Explained"),
              h5("Upper left:"),
@@ -200,71 +212,71 @@ server <- function(input, output) {
  }
   # Respiratory 
   output$box1 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Res_Inf, graph="EVI", ln=F)
+    evi.graphs(EVI_output=EVI_Res_Inf, graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box2 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Res_Inf, graph="EVI", ln=T)
+    evi.graphs(EVI_output=EVI_Res_Inf, graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box3 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Res_Inf, graph="PPV", ln=T)
+    evi.graphs(EVI_output=EVI_Res_Inf, graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box4 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Res_Inf, graph="NPV", ln=T)
+    evi.graphs(EVI_output=EVI_Res_Inf, graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   # COVID
   
   output$box5 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
+    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box6 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F)
+    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box7 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="PPV", ln=T)
+    evi.graphs(EVI_output=EVI_COVID, graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box8 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="NPV", ln=T)
+    evi.graphs(EVI_output=EVI_COVID, graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   # Flu
   output$box9 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=F)
+    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box10 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=T)
+    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box11 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="PPV", ln=T)
+    evi.graphs(EVI_output=EVI_Flu, graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box12 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="NPV", ln=T)
+    evi.graphs(EVI_output=EVI_Flu, graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   # Pneumonia
   #output$box13 <- renderPlot({
-  #  evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=F)
+  #  evi.graphs(EVI_output=EVI_Pneum[input$rdates_Pneum[1]:input$rdates_Pneum[2],], graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
   #})
   
   #output$box14 <- renderPlot({
-  #  evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=T)
+  #  evi.graphs(EVI_output=EVI_Pneum[input$rdates_Pneum[1]:input$rdates_Pneum[2],], graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
   #})
   
   #output$box15 <- renderPlot({
-  #  evi.graphs(EVI_output=EVI_Pneum, graph="PPV", ln=T)
+  #  evi.graphs(EVI_output=EVI_Pneum[input$rdates_Pneum[1]:input$rdates_Pneum[2],], graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   #})
   
   #output$box16 <- renderPlot({
-  #  evi.graphs(EVI_output=EVI_Pneum, graph="NPV", ln=T)
+  #  evi.graphs(EVI_output=EVI_Pneum[input$rdates_Pneum[1]:input$rdates_Pneum[2],], graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   #})
   
   
