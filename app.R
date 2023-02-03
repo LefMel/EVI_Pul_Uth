@@ -251,21 +251,21 @@ server <- function(input, output) {
   })
   
   # Pneumonia
-  output$box13 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=F)
-  })
+  #output$box13 <- renderPlot({
+  #  evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=F)
+  #})
   
-  output$box14 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=T)
-  })
+  #output$box14 <- renderPlot({
+  #  evi.graphs(EVI_output=EVI_Pneum, graph="EVI", ln=T)
+  #})
   
-  output$box15 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Pneum, graph="PPV", ln=T)
-  })
+  #output$box15 <- renderPlot({
+  #  evi.graphs(EVI_output=EVI_Pneum, graph="PPV", ln=T)
+  #})
   
-  output$box16 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Pneum, graph="NPV", ln=T)
-  })
+  #output$box16 <- renderPlot({
+  #  evi.graphs(EVI_output=EVI_Pneum, graph="NPV", ln=T)
+  #})
   
   
   
