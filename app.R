@@ -29,13 +29,28 @@ ui <- dashboardPage(
     sidebarUserPanel("Version 1.2"),
     
     sidebarMenu(id ="tabs",
-      menuItem("Options", tabName = "dashboard", icon = icon("dashboard"),
-        #       dateRangeInput("rdates_Res_Inf", "Range of dates for Respiratory Infections:", start = min(EVI_Res_Inf$Days), end = max(EVI_Res_Inf$Days)), # input$rdates_Res_Inf
-        #       dateRangeInput("rdates_Pneum", "Range of dates for Pneumonia:", start = min(EVI_Pneum$Days), end = max(EVI_Pneum$Days)), # input$rdates_Pneum
-        #       dateRangeInput("rdates_Flu", "Range of dates for Flu cases:", start = min(EVI_Flu$Days), end = max(EVI_Flu$Days)), # input$rdates_Flu
-        #       dateRangeInput("rdates_COVID", "Range of dates for COVID-19 cases:", start = min(EVI_COVID$Days), end = max(EVI_COVID$Days)), # input$rdates_COVID
-          
-                 
+      menuItem("Time Period", tabName = "Time_Period", icon = icon("bar-chart")),
+              dateRangeInput("rdates_Res_Inf", "Range of dates for Respiratory Infections:", start = min(EVI_Res_Inf$Days), end = max(EVI_Res_Inf$Days)), # input$rdates_Res_Inf
+              dateRangeInput("rdates_COVID", "Range of dates for COVID-19 cases:", start = min(EVI_COVID$Days), end = max(EVI_COVID$Days)), # input$rdates_COVID
+              dateRangeInput("rdates_Flu", "Range of dates for Flu cases:", start = min(EVI_Flu$Days), end = max(EVI_Flu$Days)), # input$rdates_Flu
+      #dateRangeInput("rdates_Pneum", "Range of dates for Pneumonia:", start = min(EVI_Pneum$Days), end = max(EVI_Pneum$Days)), # input$rdates_Pneum
+
+              
+      
+            
+      menuItem("Model Predictive Value", tabName = "PV", icon = icon("line-chart"),
+               menuItem("Positive Predictive Value", icon = icon("angle-right"),
+                           checkboxInput("PPV", "Plot model's positive predictive values", value = FALSE) # input$PPV
+                        ),
+               menuItem("Negative Predictive Value", tabName = "NPV", icon = icon("angle-right"),
+                          checkboxInput("NPV", "Plot model's negative predictive values", value = FALSE) # input$NPV
+                        )
+               ),
+      #menuItem("ReadMe", tabName = "readme", icon=icon("mortar-board")),
+      #menuItem("About", tabName = "about", icon = icon("question")),
+      hr(),
+      
+      menuItem("Plot Features", tabName = "dashboard", icon = icon("line-chart"),
                
                checkboxInput("rlines", "Draw lines instead of points (EVI plots)", value = FALSE)#, # input$rlines==FALSE
                
@@ -47,131 +62,86 @@ ui <- dashboardPage(
       
     ),
     
+    hr(),
+    h4("References"),
+    helpText(tags$b(""),"Kostoulas, P., Meletis, E., Pateras, K. et al. The epidemic volatility index, a novel early warning tool for identifying new waves in an epidemic. Sci Rep 11, 23775 (2021)",
+             tags$a(href="https://www.nature.com/articles/s41598-021-02622-3", 
+                    "Read it here")),
+    helpText(tags$b(""),"Meletis E. et al. EVI R-package: Epidemic Volatility Index as an Early-Warning Tool",
+             tags$a(href="https://cran.r-project.org/web/packages/EVI/EVI.pdf", 
+                    "R-package Info")),
+    
     
     tabPanel("Info", tabName = "Widgets", icon = icon("th"),
-             h3("Respiratory Infections"),
-             h5("Time period:",  paste(min(EVI_Res_Inf$Days), "-", max(EVI_Res_Inf$Days))),
-             #textOutput("daterange1_valid_Resp"), #KP:  Error message for Respiratory infections selection
-             h5("--"),
-             
-             h3("Pneumonia"),
-             h5("Time period:",  paste(min(EVI_Pneum$Days), "-", max(EVI_Pneum$Days))),
-             #textOutput("daterange1_valid_Pneum"), #KP:  Uncomment if added in server(), see Resp example.
-             h5("--"),
-             
-             h3("Flu"),
-             h5("Time period:",  paste(min(EVI_Flu$Days), "-", max(EVI_Flu$Days))),
-             #textOutput("daterange1_valid_Flu"), #KP:  Uncomment if added in server()
-             h5("--"),
-             
-             h3("COVID"),
-             h5("Time period:",  paste(min(EVI_COVID$Days), "-", max(EVI_COVID$Days))),
-             #textOutput("daterange1_valid_COVID"), #KP:  Uncomment if added in server()
              
              h4("Figures Explained"),
              h5("Upper left:"),
              h6("Observations (updated every two days), presented on the original scale, with red dots corresponding to dates that, according to EVI, an early warning was issued."),
              h5("Upper right:"),
              h6("Observations (updated every two days), presented on the logarithmic scale, which facilitates the comparison of the steepness of the epidemic curve between the different waves."),
-             h5("Bottom left:"),
+             hr(),
+             h5("Model Predictive value"),
              h6("Positive predictive value (PPV) for the days that an early warning was issued. Higher color intensity corresponds to PPV closer to the value of 1."),
-             h5("Bottom right:"),
-             h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1."),
-             h4("References"),
-             helpText(tags$b(""),"Kostoulas, P., Meletis, E., Pateras, K. et al. The epidemic volatility index, a novel early warning tool for identifying new waves in an epidemic. Sci Rep 11, 23775 (2021)",
-                      tags$a(href="https://www.nature.com/articles/s41598-021-02622-3", 
-                             "Read it here")),
-             helpText(tags$b(""),"Meletis E. et al. EVI R-package: Epidemic Volatility Index as an Early-Warning Tool",
-                      tags$a(href="https://cran.r-project.org/web/packages/EVI/EVI.pdf", 
-                             "R-package Info"))
+             h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1.")
              
     )
   ),
   
   
   dashboardBody(
-    tabsetPanel(
-      tabPanel("Respiratory Infections",
+    
+    tabBox(width=NULL,
+    
+      tabPanel(h5("Respiratory Infections"),
                fluidRow(
-                 box(plotOutput("box1")),
-                 box(plotOutput("box2")),
-                 box(plotOutput("box3")),
-                 box(plotOutput("box4"))
+                 box(plotOutput("boxR1")),
+                 box(plotOutput("boxR2")),
+                 box(plotOutput("boxR3")),
+                 box(plotOutput("boxR4")),
+                 box(plotOutput("boxR5")),
+                 box(plotOutput("boxR6"))
                )
-      )
-    ),
-    tabsetPanel(
-      tabPanel("COVID",
+      ),
+      tabPanel("COVID-19",
                fluidRow(
-                 box(plotOutput("box5")),
-                 box(plotOutput("box6")),
-                 box(plotOutput("box7")),
-                 box(plotOutput("box8"))
+                 box(plotOutput("boxC1")),
+                 box(plotOutput("boxC2")),
+                 box(plotOutput("boxC3")),
+                 box(plotOutput("boxC4")),
+                 box(plotOutput("boxC5")),
+                 box(plotOutput("boxC6"))
                )
-      )
-    ),
-    tabsetPanel(
+      ),
+  
       tabPanel("Flu",
                fluidRow(
-                 box(plotOutput("box9")),
-                 box(plotOutput("box10")),
-                 box(plotOutput("box11")),
-                 box(plotOutput("box12"))
+                 box(plotOutput("boxF1")),
+                 box(plotOutput("boxF2")),
+                 box(plotOutput("boxF3")),
+                 box(plotOutput("boxF4")),
+                 box(plotOutput("boxF5")),
+                 box(plotOutput("boxF6"))
                )
-      )
-    ),
-    tabsetPanel(
-      tabPanel("Pneumonia",
-               fluidRow(
-                 box(plotOutput("box13")),
-                 box(plotOutput("box14")),
-                 box(plotOutput("box15")),
-                 box(plotOutput("box16"))
-               )
-      )
+      )#,
+
+      #tabPanel("Pneumonia",
+      #         fluidRow(
+      #           box(plotOutput("boxP1")),
+      #           box(plotOutput("boxP2")),
+      #           box(plotOutput("boxP3")),
+      #           box(plotOutput("boxP4")),
+      #           box(plotOutput("boxP5")),
+      #           box(plotOutput("boxP6"))
+      #         )
+      #)
+
     )
   )
-  
-  
-  
-)      
-
-# MAIN BODY
-#  fluidRow(
-#      column(        width = 12,
-#         bsButton("Respiratory Infections", 
-#                 label = "res_inf", 
-#icon = icon("user"), 
-#                 style = "success"),
-#   bsButton("Pneumonia", 
-###            label = "pneumonia", 
-#         # icon = icon("spinner", class = "spinner-box"), 
-#            style = "success"),
-#   bsButton("COVID-19", 
-#           label = "covid", 
-#icon = icon("flask", class = "flask-box"), 
-#           style = "success"),
-#  bsButton("Flu", 
-#           label = "flu", 
-#           #icon = icon("thumbs-up"), 
-#           style = "success"),
-# )
-#)
-
-
-
-#  fluid_design("res_inf_panel", "box1", "box2", "box3", "box4"),
-# fluid_design("pneumonia_panel", "box5", "box6", "box7", "box8"),
-# fluid_design("covid_panel", "box9", "box10", "box11", "box12"),
-# fluid_design("flu_panel", "box13", "box14", "box15", "box16")
-
+)
 
 
 #server.R
 
-#
-
-# Define server logic required to draw a histogram
 
 server <- function(input, output) {
   
@@ -224,69 +194,163 @@ server <- function(input, output) {
 # Respiratory 
  
 # KP: Here I have added a text output. If the date selected by the user does not exist gives a suggestion to move onto the next one.
- output$daterange1_valid_Resp <- renderText({
-   is_valid <- any(input$rdates_Res_Inf == EVI_Res_Inf$Days)
-   ifelse(is_valid, "OK", "There is no available respiratory data for the chosen date. Choose the next available.")
- })
- # Similarly for the other 3 if you find it useful.
+#  output$daterange1_valid_Resp <- renderText({
+#    is_valid <- any(input$rdates_Res_Inf == EVI_Res_Inf$Days)
+#    ifelse(is_valid, "OK", "No available respiratory data for the chosen date. Choose the next available.")
+#  })
+
+#  output$daterange1_valid_Pneum <- renderText({
+#    is_valid <- any(input$rdates_Pneum == EVI_Pneum$Days)
+#    ifelse(is_valid, "OK", "No available pneumonia data for the chosen date. Choose the next available.")
+#  })
  
-  output$box1 <- renderPlot({
-   # LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP:  These choose the number of line based on the input date resulting in a a vector LL:UL 
-    # KP: The next two lines may be useful to automate the wrong choice of date by the user. 
-    #  LL=ifelse(identical(LL1, numeric(0)),yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[1]+1))),no = LL1)    
-    #  UL=ifelse(identical(UL1, numeric(0)),yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[2]+1))),no = UL1)
-    evi.graphs(EVI_output=EVI_Res_Inf, graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
+#  output$daterange1_valid_Flu <- renderText({
+#    is_valid <- any(input$rdates_Flu == EVI_Flu$Days)
+#    ifelse(is_valid, "OK", "There is no available flu data for the chosen date. Choose the next available.")
+#  })
+ 
+#  output$daterange1_valid_COVID <- renderText({
+#    is_valid <- any(input$rdates_COVID == EVI_COVID$Days)
+#    ifelse(is_valid, "OK", "There is no available COVID data for the chosen date. Choose the next available.")
+#  })
+ 
+  
+  output$boxR1 <- renderPlot({
+      LL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[1]+1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1])) 
+      UL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[2]-1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2])) 
+      evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
   })
   
-  output$box2 <- renderPlot({
-  #  LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP: Same 
-    evi.graphs(EVI_output=EVI_Res_Inf, graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  output$boxR2 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[1]+1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1])) 
+    UL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[2]-1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2])) 
+    evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
-  output$box3 <- renderPlot({
-  #  LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP: Same 
-    evi.graphs(EVI_output=EVI_Res_Inf, graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  output$boxR3 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[1]+1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1])) 
+    UL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[2]-1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2])) 
+    
+    ifelse(test = input$PPV, evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="PPV", ln=F,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+
+
+  })
+
+  output$boxR4 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[1]+1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1])) 
+    UL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[2]-1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2])) 
+    
+    ifelse(test = input$PPV, evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+
+    
   })
   
-  output$box4 <- renderPlot({
-  #  LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP: Same 
-    evi.graphs(EVI_output=EVI_Res_Inf, graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  output$boxR5 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[1]+1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1])) 
+    UL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[2]-1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2])) 
+    
+  ifelse(test = input$NPV, evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="NPV", ln=F,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+    
   })
   
+  output$boxR6 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[1]+1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1])) 
+    UL=ifelse(identical(which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]),integer(0)), yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[2]-1))), no = which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2])) 
+    ifelse(test = input$NPV, evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+    
+  })
   
   # COVID
   
-  output$box5 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
+  output$boxC1 <- renderPlot({
+    LL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[1]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[1]+1))), no = which(EVI_COVID$Days==input$rdates_COVID[1])) 
+    UL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[2]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[2]-1))), no = which(EVI_COVID$Days==input$rdates_COVID[2])) 
+    evi.graphs(EVI_output=EVI_COVID[LL:UL,], graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
   })
   
-  output$box6 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
+  output$boxC2 <- renderPlot({
+    LL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[1]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[1]+1))), no = which(EVI_COVID$Days==input$rdates_COVID[1])) 
+    UL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[2]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[2]-1))), no = which(EVI_COVID$Days==input$rdates_COVID[2])) 
+    evi.graphs(EVI_output=EVI_COVID[LL:UL,], graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
-  output$box7 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  output$boxC3 <- renderPlot({
+    LL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[1]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[1]+1))), no = which(EVI_COVID$Days==input$rdates_COVID[1])) 
+    UL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[2]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[2]-1))), no = which(EVI_COVID$Days==input$rdates_COVID[2])) 
+    
+    ifelse(test = input$PPV, evi.graphs(EVI_output=EVI_COVID[LL:UL,], graph="PPV", ln=F,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+
   })
   
-  output$box8 <- renderPlot({
-    evi.graphs(EVI_output=EVI_COVID, graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  output$boxC4 <- renderPlot({
+    LL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[1]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[1]+1))), no = which(EVI_COVID$Days==input$rdates_COVID[1])) 
+    UL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[2]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[2]-1))), no = which(EVI_COVID$Days==input$rdates_COVID[2])) 
+    
+    ifelse(test = input$PPV, evi.graphs(EVI_output=EVI_COVID[LL:UL,], graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+     
+    
+  })
+  
+  output$boxC5 <- renderPlot({
+    LL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[1]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[1]+1))), no = which(EVI_COVID$Days==input$rdates_COVID[1])) 
+    UL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[2]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[2]-1))), no = which(EVI_COVID$Days==input$rdates_COVID[2])) 
+    
+    ifelse(test = input$NPV, evi.graphs(EVI_output=EVI_COVID[LL:UL,], graph="NPV", ln=F,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+    
+  })
+  
+  output$boxC6 <- renderPlot({
+    LL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[1]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[1]+1))), no = which(EVI_COVID$Days==input$rdates_COVID[1])) 
+    UL=ifelse(identical(which(EVI_COVID$Days==input$rdates_COVID[2]),integer(0)), yes = which(EVI_COVID$Days==(as.Date(input$rdates_COVID[2]-1))), no = which(EVI_COVID$Days==input$rdates_COVID[2])) 
+    
+    ifelse(test = input$NPV, evi.graphs(EVI_output=EVI_COVID[LL:UL,], graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+    
   })
   
   # Flu
-  output$box9 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
+  output$boxF1 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[1]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[1]+1))), no = which(EVI_Flu$Days==input$rdates_Flu[1])) 
+    UL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[2]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[2]-1))), no = which(EVI_Flu$Days==input$rdates_Flu[2])) 
+    evi.graphs(EVI_output=EVI_Flu[LL:UL,], graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
   })
   
-  output$box10 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  output$boxF2 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[1]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[1]+1))), no = which(EVI_Flu$Days==input$rdates_Flu[1])) 
+    UL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[2]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[2]-1))), no = which(EVI_Flu$Days==input$rdates_Flu[2])) 
+    
+    evi.graphs(EVI_output=EVI_Flu[LL:UL,], graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
-  output$box11 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  output$boxF3 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[1]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[1]+1))), no = which(EVI_Flu$Days==input$rdates_Flu[1])) 
+    UL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[2]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[2]-1))), no = which(EVI_Flu$Days==input$rdates_Flu[2])) 
+    
+    ifelse(test = input$PPV, evi.graphs(EVI_output=EVI_Flu[LL:UL,], graph="PPV", ln=F,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+
   })
   
-  output$box12 <- renderPlot({
-    evi.graphs(EVI_output=EVI_Flu, graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  output$boxF4 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[1]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[1]+1))), no = which(EVI_Flu$Days==input$rdates_Flu[1])) 
+    UL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[2]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[2]-1))), no = which(EVI_Flu$Days==input$rdates_Flu[2])) 
+    
+    ifelse(test = input$PPV, evi.graphs(EVI_output=EVI_Flu[LL:UL,], graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+    
+  })
+  
+  output$boxF5 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[1]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[1]+1))), no = which(EVI_Flu$Days==input$rdates_Flu[1])) 
+    UL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[2]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[2]-1))), no = which(EVI_Flu$Days==input$rdates_Flu[2])) 
+    
+    ifelse(test = input$NPV, evi.graphs(EVI_output=EVI_Flu[LL:UL,], graph="NPV", ln=F,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+    
+  })
+  
+  output$boxF6 <- renderPlot({
+    LL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[1]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[1]+1))), no = which(EVI_Flu$Days==input$rdates_Flu[1])) 
+    UL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[2]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[2]-1))), no = which(EVI_Flu$Days==input$rdates_Flu[2])) 
+
+    ifelse(test = input$NPV, evi.graphs(EVI_output=EVI_Flu[LL:UL,], graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
+    
   })
   
   # Pneumonia
