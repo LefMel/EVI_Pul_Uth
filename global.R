@@ -122,13 +122,13 @@ deviant <-  function (new_cases, cum = FALSE, r_a = 7, r = 0.2, lag_max = 30, or
 
 #remotes::install_github("ku-awdc/EVI")
 
-EVI_Res_Inf = deviant(as.numeric(as.character(data$Resp_Inf[1:243])), r_a = 14, origin = "2021-10-02")
+EVI_Res_Inf = deviant(as.numeric(as.character(data$Resp_Inf[which(data$Resp_Inf!="")])), r_a = 14, origin = "2021-10-02")
 save(EVI_Res_Inf, file="EVI_Res_Inf")
-EVI_Pneum = deviant(as.numeric(as.character(data$Pneum[1:243]), r_a=14), origin = "2021-10-02")
+EVI_Pneum = deviant(as.numeric(as.character(data$Pneum[which(data$Pneum!="")]), r_a=14), origin = "2021-10-02")
 save(EVI_Pneum, file="EVI_Pneum")
-EVI_Flu = deviant(as.numeric(as.character(data$Flu[206:244])), r_a = 14, origin = "2022-11-16")
+EVI_Flu = deviant(as.numeric(as.character(data$Flu[which(data$Flu!="")])), r_a = 14, origin = "2022-11-16")
 save(EVI_Flu, file="EVI_Flu")
-EVI_COVID = deviant(as.numeric(as.character(data[62:243,9])), r_a = 14, origin = "2022-02-01")
+EVI_COVID = deviant(as.numeric(as.character(data$`COVID-19`[which(data$`COVID-19`!="")])), r_a = 14, origin = "2022-02-01")
 save(EVI_COVID, file = "EVI_COVID")
 
 save(data, file="data")

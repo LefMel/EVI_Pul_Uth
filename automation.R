@@ -1,4 +1,9 @@
+setw("/srv/shiny-server/version10")
+
 library(EVI)
+library(googledrive)
+library(XML)
+library(rlist)
 drive_deauth()
 temp <- tempfile(tmpdir = getwd(), fileext = ".zip")
 dl <- drive_download(
@@ -188,48 +193,64 @@ deviant_update=function(new_cases, cum = FALSE, r_a=7, r=0.2, lag_max=30, origin
   
 }
 
-if(identical(data, new_data) == TRUE){
+
+# EVI_Res_Inf
+if(identical(which(data$Resp_Inf!=""), which(new_data$Resp_Inf!="")) == TRUE){
   print("No Changes have been made")
-  } else {
-    
-      # EVI_Res_Inf
-      if(!exists("EVI_Res_Inf"))
-        load("EVI_Res_Inf")
-      EVI_output = EVI_Res_Inf
-      
-      EVI_Res_Inf = deviant_update(as.numeric(as.character(new_data$Resp_Inf)), r_a = 14, origin = "2021-10-02")
-      save(EVI_Res_Inf, file="EVI_Res_Inf")
-      load("EVI_Res_Inf")
-      
-      # EVI_Pneum
-      if(!exists("EVI_Pneum"))
-        load("EVI_Pneum")
-      EVI_output = EVI_Pneum
-      
-      EVI_Pneum = deviant_update(as.numeric(as.character(data$Pneum), r_a=14), origin = "2021-10-02")
-      save(EVI_Pneum, file="EVI_Pneum")
-      load("EVI_Pneum")
-      
-      # EVI_Flu
-      if(!exists("EVI_Flu"))
-        load("EVI_Flu")
-      EVI_output = EVI_Flu
-      
-      EVI_Flu = deviant_update(as.numeric(as.character(data$Flu[206:length(data$Flu)])), r_a = 14, origin = "2022-11-16")
-      save(EVI_Flu, file="EVI_Flu")
-      load("EVI_Flu")
-      
-      
-      # EVI_COVID
-      if(!exists("EVI_COVID"))
-        load("EVI_COVID")
-      EVI_output = EVI_COVID
-      
-      EVI_COVID = deviant_update(as.numeric(as.character(data[62:length(data$Flu),9])), r_a = 14,  origin = "2022-02-01")
-      save(EVI_COVID, file = "EVI_COVID")
-      load("EVI_COVID")
-        
-  }  
+  load("EVI_Res_Inf")
+} else {
+  if(!exists("EVI_Res_Inf"))
+    load("EVI_Res_Inf")
+  EVI_output = EVI_Res_Inf
+  
+  EVI_Res_Inf = deviant_update(as.numeric(as.character(new_data$Resp_Inf[which(new_data$Resp_Inf!="")])), r_a = 14, origin = "2021-10-02")
+  save(EVI_Res_Inf, file="EVI_Res_Inf")
+  load("EVI_Res_Inf")
+}
+
+# EVI_Pneum
+if(identical(which(data$Pneum!=""), which(new_data$Pneum!="")) == TRUE){
+  print("No Changes have been made")
+  load("EVI_Pneum")
+} else {
+  if(!exists("EVI_Pneum"))
+    load("EVI_Pneum")
+  EVI_output = EVI_Pneum
+  
+  EVI_Pneum = deviant_update(as.numeric(as.character(new_data$Pneum[which(new_data$Pneum!="")])), r_a = 14, origin = "2021-10-02")
+  save(EVI_Pneum, file="EVI_Pneum")
+  load("EVI_Pneum")
+}
+
+# EVI_Flu
+if(identical(which(data$Flu!=""), which(new_data$Flu!="")) == TRUE){
+  print("No Changes have been made")
+  load("EVI_Flu")
+} else {
+  if(!exists("EVI_Flu"))
+    load("EVI_Flu")
+  EVI_output = EVI_Flu
+  
+  EVI_Flu = deviant_update(as.numeric(as.character(new_data$Flu[which(new_data$Flu!="")])), r_a = 14, origin = "2022-11-16")
+  save(EVI_Flu, file="EVI_Flu")
+  load("EVI_Flu")
+}
+
+# EVI_COVID
+if(identical(which(data$`COVID-19`!=""), which(new_data$`COVID-19`!="")) == TRUE){
+  print("No Changes have been made")
+  load("EVI_COVID")
+} else {
+  if(!exists("EVI_COVID"))
+    load("EVI_COVID")
+  EVI_output = EVI_COVID
+  
+  EVI_COVID = deviant_update(as.numeric(as.character(new_data$`COVID-19`[which(new_data$`COVID-19`!="")])), r_a = 14, origin = "2022-02-01")
+  save(EVI_COVID, file="EVI_COVID")
+  load("EVI_COVID")
+}
+
 
 data = new_data
+save(data, file = "data")
   

@@ -28,9 +28,9 @@ ui <- dashboardPage(
     
     sidebarUserPanel("Version 1.2"),
     
-    sidebarMenu(
+    sidebarMenu(id ="tabs",
       menuItem("Options", tabName = "dashboard", icon = icon("dashboard"),
-               dateRangeInput("rdates_Res_Inf", "Range of dates for Respiratory Infections:", start = min(EVI_Res_Inf$Days), end = max(EVI_Res_Inf$Days)), # input$rdates_Res_Inf
+        #       dateRangeInput("rdates_Res_Inf", "Range of dates for Respiratory Infections:", start = min(EVI_Res_Inf$Days), end = max(EVI_Res_Inf$Days)), # input$rdates_Res_Inf
         #       dateRangeInput("rdates_Pneum", "Range of dates for Pneumonia:", start = min(EVI_Pneum$Days), end = max(EVI_Pneum$Days)), # input$rdates_Pneum
         #       dateRangeInput("rdates_Flu", "Range of dates for Flu cases:", start = min(EVI_Flu$Days), end = max(EVI_Flu$Days)), # input$rdates_Flu
         #       dateRangeInput("rdates_COVID", "Range of dates for COVID-19 cases:", start = min(EVI_COVID$Days), end = max(EVI_COVID$Days)), # input$rdates_COVID
@@ -42,7 +42,7 @@ ui <- dashboardPage(
          #      numericInput("rsize", "Size of points", value = 1.5) # input$rsize
                
                )
-      
+
       
       
     ),
@@ -51,18 +51,18 @@ ui <- dashboardPage(
     tabPanel("Info", tabName = "Widgets", icon = icon("th"),
              h3("Respiratory Infections"),
              h5("Time period:",  paste(min(EVI_Res_Inf$Days), "-", max(EVI_Res_Inf$Days))),
-             textOutput("daterange1_valid_Resp"), #KP:  Error message for Respiratory infections selection
-             h3("--"),
+             #textOutput("daterange1_valid_Resp"), #KP:  Error message for Respiratory infections selection
+             h5("--"),
              
              h3("Pneumonia"),
              h5("Time period:",  paste(min(EVI_Pneum$Days), "-", max(EVI_Pneum$Days))),
              #textOutput("daterange1_valid_Pneum"), #KP:  Uncomment if added in server(), see Resp example.
-             h3("--"),
+             h5("--"),
              
              h3("Flu"),
              h5("Time period:",  paste(min(EVI_Flu$Days), "-", max(EVI_Flu$Days))),
              #textOutput("daterange1_valid_Flu"), #KP:  Uncomment if added in server()
-             h3("--"),
+             h5("--"),
              
              h3("COVID"),
              h5("Time period:",  paste(min(EVI_COVID$Days), "-", max(EVI_COVID$Days))),
@@ -231,26 +231,26 @@ server <- function(input, output) {
  # Similarly for the other 3 if you find it useful.
  
   output$box1 <- renderPlot({
-    LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP:  These choose the number of line based on the input date resulting in a a vector LL:UL 
+   # LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP:  These choose the number of line based on the input date resulting in a a vector LL:UL 
     # KP: The next two lines may be useful to automate the wrong choice of date by the user. 
     #  LL=ifelse(identical(LL1, numeric(0)),yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[1]+1))),no = LL1)    
     #  UL=ifelse(identical(UL1, numeric(0)),yes = which(EVI_Res_Inf$Days==(as.Date(input$rdates_Res_Inf[2]+1))),no = UL1)
-    evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
+    evi.graphs(EVI_output=EVI_Res_Inf, graph="EVI", ln=F,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box2 <- renderPlot({
-    LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP: Same 
-    evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  #  LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP: Same 
+    evi.graphs(EVI_output=EVI_Res_Inf, graph="EVI", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box3 <- renderPlot({
-    LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP: Same 
-    evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  #  LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP: Same 
+    evi.graphs(EVI_output=EVI_Res_Inf, graph="PPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   output$box4 <- renderPlot({
-    LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP: Same 
-    evi.graphs(EVI_output=EVI_Res_Inf[LL:UL,], graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
+  #  LL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[1]);UL=which(EVI_Res_Inf$Days==input$rdates_Res_Inf[2]) #KP: Same 
+    evi.graphs(EVI_output=EVI_Res_Inf, graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p"))
   })
   
   
