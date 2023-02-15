@@ -26,7 +26,7 @@ ui <- dashboardPage(
     width = 300,
     div(class = "inlay", style = "height:15px;width:100%;background-color: #ecf0f5;"),
     
-    sidebarUserPanel("Version 1.2"),
+    sidebarUserPanel("Version 1.3"),
     
     sidebarMenu(id ="tabs",
       menuItem("Time Period", tabName = "Time_Period", icon = icon("bar-chart")),
