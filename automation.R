@@ -1,5 +1,5 @@
 setwd("/srv/shiny-server/version10")
-setwd("C:/Users/LefMel/Documents/GitHub/EVI_Pul_Uth")
+#setwd("C:/Users/LefMel/Documents/GitHub/EVI_Pul_Uth")
 library(EVI)
 library(googledrive)
 library(XML)
