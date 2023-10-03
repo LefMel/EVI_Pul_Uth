@@ -1,5 +1,5 @@
-setwd("/srv/shiny-server/version10")
-#setwd("C:/Users/LefMel/Documents/GitHub/EVI_Pul_Uth")
+#setwd("/srv/shiny-server/version10")
+setwd("C:/Users/LefMel/Documents/GitHub/EVI_Pul_Uth")
 library(EVI)
 library(googledrive)
 library(XML)
@@ -254,3 +254,4 @@ if(identical(which(data$`COVID-19`!=""), which(new_data$`COVID-19`!="")) == TRUE
 data = new_data
 save(data, file = "data")
   
+
