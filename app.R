@@ -8,6 +8,7 @@ library(shiny)
 library(shinydashboard)
 # library(EVI)
 library(ggplot2)
+library(DT)
 
 ui <- dashboardPage(
   
@@ -96,6 +97,7 @@ ui <- dashboardPage(
                fluidRow(
                  box(plotOutput("boxR1")),
                  box(plotOutput("boxR2")),
+                 DTOutput("tableResInf"),
                  box(plotOutput("boxR3")),
                  box(plotOutput("boxR4")),
                  box(plotOutput("boxR5")),
@@ -106,6 +108,7 @@ ui <- dashboardPage(
                fluidRow(
                  box(plotOutput("boxC1")),
                  box(plotOutput("boxC2")),
+                 DTOutput("tableCOVID"),
                  box(plotOutput("boxC3")),
                  box(plotOutput("boxC4")),
                  box(plotOutput("boxC5")),
@@ -117,6 +120,7 @@ ui <- dashboardPage(
                fluidRow(
                  box(plotOutput("boxF1")),
                  box(plotOutput("boxF2")),
+                 DTOutput("tableFlu"),
                  box(plotOutput("boxF3")),
                  box(plotOutput("boxF4")),
                  box(plotOutput("boxF5")),
@@ -260,6 +264,12 @@ server <- function(input, output) {
     
   })
   
+  output$tableResInf <- renderDataTable({
+    # Assuming EVI_Res_Inf is your data frame for Respiratory Infections
+    datatable(EVI_Res_Inf, options = list(pageLength = 10, displayStart = nrow(EVI_Res_Inf) - 10,  # Start display from the last 10 entries
+                                          lengthMenu = c(10, 25, 50, 100, nrow(EVI_Res_Inf))))
+  })
+  
   # COVID
   
   output$boxC1 <- renderPlot({
@@ -307,6 +317,13 @@ server <- function(input, output) {
     
   })
   
+  output$tableCOVID <- renderDataTable({
+    # Assuming EVI_Res_Inf is your data frame for Respiratory Infections
+    datatable(EVI_COVID, options = list(pageLength = 10, displayStart = nrow(EVI_COVID) - 10,  # Start display from the last 10 entries
+                                        lengthMenu = c(10, 25, 50, 100, nrow(EVI_COVID))))
+  })
+  
+  
   # Flu
   output$boxF1 <- renderPlot({
     LL=ifelse(identical(which(EVI_Flu$Days==input$rdates_Flu[1]),integer(0)), yes = which(EVI_Flu$Days==(as.Date(input$rdates_Flu[1]+1))), no = which(EVI_Flu$Days==input$rdates_Flu[1])) 
@@ -352,6 +369,13 @@ server <- function(input, output) {
     ifelse(test = input$NPV, evi.graphs(EVI_output=EVI_Flu[LL:UL,], graph="NPV", ln=T,type = ifelse(test = input$rlines,"l","p")), "Check Model predictive value")
     
   })
+  
+  output$tableFlu <- renderDataTable({
+    # Assuming EVI_Res_Inf is your data frame for Respiratory Infections
+    datatable(EVI_Flu, options = list(pageLength = 10, displayStart = nrow(EVI_Flu) - 10,  # Start display from the last 10 entries
+                                      lengthMenu = c(10, 25, 50, 100, nrow(EVI_Flu))))
+  })
+  
   
   # Pneumonia
   #output$box13 <- renderPlot({
